@@ -12,7 +12,9 @@ import ru.practicum.ewm.service.EwmStatsServiceService;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,12 +35,15 @@ public class EwmStatsServiceController {
     public List<ViewStatsDto> getViewStats(
             @RequestParam String start,
             @RequestParam String end,
-            @RequestParam(required = false) List<String> uris,
+            @RequestParam(required = false) String uris,
             @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("EwmStatsServiceController - GET: /stats start={}, end={}, uris={}, unique={}",
                 start, end, uris, unique);
         LocalDateTime startLDT = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endDateLDT = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return service.getViewStats(startLDT, endDateLDT, uris, unique);
+        LocalDateTime endLDT = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        List<String> urisList = Arrays.stream(uris.substring(1, uris.length() - 1).split(", "))
+                .map(String::trim)
+                .collect(Collectors.toList());
+        return service.getViewStats(startLDT, endLDT, urisList, unique);
     }
 }
