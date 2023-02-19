@@ -1,6 +1,7 @@
 package ru.practicum.ewm.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -8,8 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ViewStatsDto {
-    private String app;
-    private String uri;
-    private Long hits;
+    String app;
+    String uri;
+    Long hits;
 }

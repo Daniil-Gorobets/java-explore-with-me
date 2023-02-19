@@ -1,6 +1,7 @@
 package ru.practicum.ewm.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,19 +12,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Builder
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "hits")
 public class EndpointHitModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
     @Column(name = "app")
-    private String app;
+    String app;
     @Column(name = "uri")
-    private String uri;
+    String uri;
     @Column(name = "ip")
-    private String ip;
+    String ip;
     @Column(name = "created")
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }

@@ -23,6 +23,7 @@ public class EwmStatsServiceController {
 
     @Autowired
     private final EwmStatsServiceService service;
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping("/hit")
     @Transactional
@@ -40,8 +41,8 @@ public class EwmStatsServiceController {
             @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("EwmStatsServiceController - GET: /stats start={}, end={}, uris={}, unique={}",
                 start, end, uris, unique);
-        LocalDateTime startLDT = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endLDT = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime startLDT = LocalDateTime.parse(start, FORMATTER);
+        LocalDateTime endLDT = LocalDateTime.parse(end, FORMATTER);
         return service.getViewStats(startLDT, endLDT, uris, unique);
     }
 }

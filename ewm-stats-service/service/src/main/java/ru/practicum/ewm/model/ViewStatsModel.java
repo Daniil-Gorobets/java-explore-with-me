@@ -1,6 +1,7 @@
 package ru.practicum.ewm.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 
 @Getter
@@ -9,8 +10,9 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ViewStatsModel {
-    private String app;
-    private String uri;
-    private Long hits;
+    String app;
+    String uri;
+    Long hits;
 }

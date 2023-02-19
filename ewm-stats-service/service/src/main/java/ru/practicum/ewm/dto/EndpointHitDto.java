@@ -2,6 +2,7 @@ package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
@@ -12,14 +13,15 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @ToString
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EndpointHitDto {
-    private Long id;
+    Long id;
     @NotBlank
-    private String app;
+    String app;
     @NotBlank
-    private String uri;
+    String uri;
     @NotBlank
-    private String ip;
+    String ip;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }
