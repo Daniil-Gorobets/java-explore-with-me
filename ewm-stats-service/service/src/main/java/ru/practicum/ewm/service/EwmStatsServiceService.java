@@ -8,15 +8,17 @@ import ru.practicum.ewm.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.EndpointHitMapper;
 import ru.practicum.ewm.dto.ViewStatsDto;
 import ru.practicum.ewm.dto.ViewStatsMapper;
+import ru.practicum.ewm.model.EndpointHitModel;
 import ru.practicum.ewm.repository.EndpointHitRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class EwmStatsServiceService {
 
     @Autowired
@@ -25,10 +27,11 @@ public class EwmStatsServiceService {
     public EndpointHitDto createEndpointHit(EndpointHitDto endpointHitDto) {
         log.debug("EwmStatsServiceService - method call 'createEndpointHit' with params: endpointHitDto={}",
                 endpointHitDto);
+        EndpointHitModel endpointHitModel = EndpointHitMapper.toEndpointHitModel(endpointHitDto);
+        log.info(endpointHitModel.toString());
         return EndpointHitMapper.toEndpointHitDto(
                 endpointHitRepository.save(
-                        EndpointHitMapper.toEndpointHitModel(
-                                endpointHitDto)));
+                        endpointHitModel));
     }
 
     public List<ViewStatsDto> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {

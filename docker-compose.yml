@@ -9,7 +9,7 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:6541/ewm_stats_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats-db
 
   stats-db:
     image: postgres:14-alpine
@@ -17,10 +17,9 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=ewm_stats_db
-      - POSTGRES_USER=ewm
-      - POSTGRES_PASSWORD=ewm
-    command: -p 6541
+      - POSTGRES_DB=ewm-stats-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
 
 
   ewm-service:
@@ -33,15 +32,14 @@ services:
       - ewm-db
       - stats-server
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:6542/ewm_main_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewm-main-db
 
   ewm-db:
     image: postgres:14-alpine
     container_name: ewm_main_db
     ports:
-      - "6542:5432"
+      - "6542:5433"
     environment:
-      - POSTGRES_DB=ewm_main_db
-      - POSTGRES_USER=ewm
-      - POSTGRES_PASSWORD=ewm
-    command: -p 6542
+      - POSTGRES_DB=ewm-main-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root

@@ -2,6 +2,7 @@ package ru.practicum.ewm.model;
 
 import lombok.*;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
