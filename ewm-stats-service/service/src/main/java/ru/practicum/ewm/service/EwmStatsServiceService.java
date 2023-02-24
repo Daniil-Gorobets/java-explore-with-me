@@ -12,6 +12,7 @@ import ru.practicum.ewm.model.EndpointHitModel;
 import ru.practicum.ewm.repository.EndpointHitRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,9 @@ public class EwmStatsServiceService {
     public List<ViewStatsDto> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         log.debug("EwmStatsServiceService - method call 'getViewStats' with params: start={}, end={}, uris={}, " +
                 "unique={}", start, end, uris, unique);
+        if (uris == null) {
+            return Collections.emptyList();
+        }
         if (unique) {
             return endpointHitRepository.findViewStatsUniqueIp(uris, start, end)
                     .stream()
