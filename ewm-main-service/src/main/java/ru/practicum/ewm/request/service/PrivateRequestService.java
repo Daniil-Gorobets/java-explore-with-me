@@ -165,7 +165,7 @@ public class PrivateRequestService {
         if (!userId.equals(participationRequest.getRequester().getId())) {
             throw new IntegrityException("User is not requestor");
         }
-        participationRequest.setStatus(RequestStatus.REJECTED);
+        participationRequest.setStatus(RequestStatus.CANCELED);
         participationRequest = requestRepository.save(participationRequest);
         return ParticipationRequestMapper.toParticipationRequestDto(participationRequest);
     }
