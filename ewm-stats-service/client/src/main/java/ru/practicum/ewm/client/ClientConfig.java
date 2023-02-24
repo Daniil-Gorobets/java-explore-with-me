@@ -18,7 +18,7 @@ public class ClientConfig {
     public static final int TIMEOUT = 1000;
 
     @Bean
-    public WebClient webClientWithTimeout(@Value("http://localhost:9090") String serverUrl) {
+    public WebClient webClientWithTimeout(@Value("http://stats-server:9090") String serverUrl) {
         final var tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)

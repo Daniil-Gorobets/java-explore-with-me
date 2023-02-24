@@ -33,8 +33,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:states IS NULL OR e.state IN (:states)) " +
             "AND (:categories IS NULL OR e.category.id IN (:categories)) " +
             "AND (:paid IS NULL OR e.paid = :paid)" +
-            "AND (:rangeStart IS NULL OR e.eventDate >= :rangeStart) " +
-            "AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd)")
+            "AND (CAST(:rangeStart AS date) IS NULL OR e.eventDate >= :rangeStart) " +
+            "AND (CAST(:rangeEnd AS date) IS NULL OR e.eventDate <= :rangeEnd)")
     List<Event> findByParams(
             @Param("text") String text,
             @Param("users") List<Long> users,
@@ -44,6 +44,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("rangeStart") LocalDateTime rangeStart,
             @Param("rangeEnd") LocalDateTime rangeEnd,
             PageRequest pageRequest);
-
-
 }
