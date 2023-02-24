@@ -60,7 +60,7 @@ public class PublicEventService {
         LocalDateTime rangeEndTime;
         if (rangeStart == null || rangeEnd == null) {
             rangeStartTime = LocalDateTime.now();
-            rangeEndTime = LocalDateTime.MAX;
+            rangeEndTime = TimeConverter.MAX_TIME;
         } else {
             rangeStartTime = TimeConverter.toTime(rangeStart);
             rangeEndTime = TimeConverter.toTime(rangeEnd);

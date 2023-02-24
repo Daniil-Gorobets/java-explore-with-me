@@ -56,6 +56,10 @@ public class PrivateRequestService {
             Long eventId,
             EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
 
+        if (eventRequestStatusUpdateRequest == null) {
+            throw new IntegrityException("Event request should have a body");
+        }
+
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
 

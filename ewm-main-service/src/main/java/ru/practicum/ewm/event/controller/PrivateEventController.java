@@ -80,7 +80,7 @@ public class PrivateEventController {
     public EventRequestStatusUpdateResult changeStatusOfParticipationRequest(
             @PathVariable @Positive @NotNull Long userId,
             @PathVariable @Positive @NotNull Long eventId,
-            @RequestBody @NotNull @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+            @RequestBody(required = false) @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
         log.info("PrivateEventController - PATCH: /users/{}/events/{}/requests eventRequestStatusUpdateRequest={}",
                 userId, eventId, eventRequestStatusUpdateRequest);
         return privateRequestService.changeStatusOfParticipationRequest(
