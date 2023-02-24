@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.controller;
+package ru.practicum.ewm.location.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.user.dto.NewUserRequest;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.service.AdminUserService;
+import ru.practicum.ewm.location.user.dto.NewUserRequest;
+import ru.practicum.ewm.location.user.dto.UserDto;
+import ru.practicum.ewm.location.user.service.AdminUserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

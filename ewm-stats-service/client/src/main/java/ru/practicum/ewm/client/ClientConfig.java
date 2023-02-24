@@ -15,16 +15,14 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class ClientConfig {
-    public static final int TIMEOUT = 1000;
 
     @Bean
     public WebClient webClientWithTimeout(@Value("http://stats-server:9090") String serverUrl) {
-        final var tcpClient = TcpClient
-                .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
+        final var tcpClient = TcpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
                 .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new ReadTimeoutHandler(30000, TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(30000, TimeUnit.MILLISECONDS));
                 });
 
         return WebClient.builder()

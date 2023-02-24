@@ -1,6 +1,6 @@
-package ru.practicum.ewm.user.dto;
+package ru.practicum.ewm.location.user.dto;
 
-import ru.practicum.ewm.user.model.User;
+import ru.practicum.ewm.location.user.model.User;
 
 public class UserMapper {
     public static UserDto toUserDto(User user) {

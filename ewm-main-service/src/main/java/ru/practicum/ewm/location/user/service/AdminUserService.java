@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.service;
+package ru.practicum.ewm.location.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.exception.IntegrityException;
-import ru.practicum.ewm.user.dto.NewUserRequest;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.dto.UserMapper;
-import ru.practicum.ewm.user.repository.UserRepository;
+import ru.practicum.ewm.location.user.dto.NewUserRequest;
+import ru.practicum.ewm.location.user.dto.UserDto;
+import ru.practicum.ewm.location.user.dto.UserMapper;
+import ru.practicum.ewm.location.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

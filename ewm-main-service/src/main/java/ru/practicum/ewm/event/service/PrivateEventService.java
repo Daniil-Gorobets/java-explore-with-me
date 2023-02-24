@@ -22,7 +22,7 @@ import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.location.repository.LocationRepository;
 import ru.practicum.ewm.request.repository.RequestRepository;
 import ru.practicum.ewm.stats.StatsService;
-import ru.practicum.ewm.user.repository.UserRepository;
+import ru.practicum.ewm.location.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

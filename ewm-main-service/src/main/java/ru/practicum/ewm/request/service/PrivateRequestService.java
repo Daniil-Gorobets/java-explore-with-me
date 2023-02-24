@@ -19,8 +19,8 @@ import ru.practicum.ewm.request.model.ParticipationRequest;
 import ru.practicum.ewm.request.model.RequestStatus;
 import ru.practicum.ewm.request.repository.RequestRepository;
 import ru.practicum.ewm.stats.StatsService;
-import ru.practicum.ewm.user.model.User;
-import ru.practicum.ewm.user.repository.UserRepository;
+import ru.practicum.ewm.location.user.model.User;
+import ru.practicum.ewm.location.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
