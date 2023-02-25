@@ -1,7 +1,6 @@
 package ru.practicum.ewm.event.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,19 +27,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminEventService {
 
-    @Autowired
     private final EventRepository eventRepository;
 
-    @Autowired
     private final RequestRepository requestRepository;
 
-    @Autowired
     private final StatsService statsService;
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
-    @Autowired
     private final LocationRepository locationRepository;
 
     public List<EventFullDto> getEvents(

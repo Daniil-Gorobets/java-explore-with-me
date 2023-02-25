@@ -2,7 +2,6 @@ package ru.practicum.ewm.category.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.dto.CategoryMapper;
@@ -18,10 +17,8 @@ import ru.practicum.ewm.exception.NotFoundException;
 @Slf4j
 public class AdminCategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
-    @Autowired
     private final EventRepository eventRepository;
 
     public CategoryDto create(NewCategoryDto newCategoryDto) {

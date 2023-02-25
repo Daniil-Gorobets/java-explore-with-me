@@ -2,7 +2,6 @@ package ru.practicum.ewm.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventRequestStatusUpdateRequest;
@@ -32,16 +31,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PrivateRequestService {
 
-    @Autowired
     private final RequestRepository requestRepository;
 
-    @Autowired
     private final EventRepository eventRepository;
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final StatsService statsService;
 
 
@@ -90,6 +85,14 @@ public class PrivateRequestService {
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
+
+        if (eventRequestStatusUpdateRequest.getRequestStatus() == RequestStatus.CONFIRMED) {
+            handleConfirmedRequests(eventFullDto, participationRequests, confirmedRequests, rejectedRequests);
+        } else if (eventRequestStatusUpdateRequest.getRequestStatus() == RequestStatus.REJECTED) {
+            handleRejectedRequests(participationRequests, rejectedRequests);
+        } else {
+            throw new IntegrityException("Incorrect status");
+        }
 
         if (eventRequestStatusUpdateRequest.getRequestStatus() == RequestStatus.CONFIRMED) {
             int placesLeft = eventFullDto.getParticipantLimit() - eventFullDto.getConfirmedRequests();
@@ -154,7 +157,6 @@ public class PrivateRequestService {
         if (!event.getRequestModeration()) {
             participationRequest.setStatus(RequestStatus.CONFIRMED);
         }
-        log.info("||||||||||||||||||||  participationRequest = {}", participationRequest);
         participationRequest = requestRepository.save(participationRequest);
         return ParticipationRequestMapper.toParticipationRequestDto(participationRequest);
     }
@@ -168,5 +170,43 @@ public class PrivateRequestService {
         participationRequest.setStatus(RequestStatus.CANCELED);
         participationRequest = requestRepository.save(participationRequest);
         return ParticipationRequestMapper.toParticipationRequestDto(participationRequest);
+    }
+
+    private void handleConfirmedRequests(
+            EventFullDto eventFullDto,
+            List<ParticipationRequest> participationRequests,
+            List<ParticipationRequestDto> confirmedRequests,
+            List<ParticipationRequestDto> rejectedRequests) {
+        int placesLeft = eventFullDto.getParticipantLimit() - eventFullDto.getConfirmedRequests();
+        for (ParticipationRequest participationRequest : participationRequests) {
+            if (placesLeft > 0) {
+                confirmParticipationRequest(participationRequest, confirmedRequests);
+                placesLeft--;
+            } else {
+                rejectParticipationRequest(participationRequest, rejectedRequests);
+            }
+        }
+    }
+
+    private void handleRejectedRequests(
+            List<ParticipationRequest> participationRequests,
+            List<ParticipationRequestDto> rejectedRequests) {
+        for (ParticipationRequest participationRequest : participationRequests) {
+            rejectParticipationRequest(participationRequest, rejectedRequests);
+        }
+    }
+
+    private void confirmParticipationRequest(
+            ParticipationRequest participationRequest,
+            List<ParticipationRequestDto> confirmedRequests) {
+        participationRequest.setStatus(RequestStatus.CONFIRMED);
+        confirmedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
+    }
+
+    private void rejectParticipationRequest(
+            ParticipationRequest participationRequest,
+            List<ParticipationRequestDto> rejectedRequests) {
+        participationRequest.setStatus(RequestStatus.REJECTED);
+        rejectedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
     }
 }

@@ -2,7 +2,6 @@ package ru.practicum.ewm.stats;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.client.StatsClient;
@@ -15,7 +14,6 @@ import java.util.List;
 @Slf4j
 public class StatsService {
 
-    @Autowired
     private final StatsClient statsClient;
 
     public ResponseEntity<Object> getViewStats(

@@ -2,7 +2,6 @@ package ru.practicum.ewm.category.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.dto.CategoryDto;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PublicCategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> getCategories(Integer from, Integer size) {

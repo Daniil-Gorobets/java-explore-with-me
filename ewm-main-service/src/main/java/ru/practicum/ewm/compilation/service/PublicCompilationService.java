@@ -2,7 +2,6 @@ package ru.practicum.ewm.compilation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
@@ -21,13 +20,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PublicCompilationService {
 
-    @Autowired
     private final CompilationRepository compilationRepository;
 
-    @Autowired
     private final RequestRepository requestRepository;
 
-    @Autowired
     private final StatsService statsService;
 
 
@@ -53,4 +49,5 @@ public class PublicCompilationService {
                 requestRepository,
                 statsService);
     }
+
 }

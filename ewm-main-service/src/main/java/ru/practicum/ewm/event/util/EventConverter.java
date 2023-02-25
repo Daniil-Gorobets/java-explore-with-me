@@ -99,66 +99,62 @@ public class EventConverter {
             List<Event> events,
             RequestRepository requestRepository,
             StatsService statsService) {
-        log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' with params: events={} " +
-                "requestRepository={}, statsService={}", events, requestRepository, statsService);
-
         List<String> uris = events.stream()
                 .map(event -> "/events/" + event.getId())
                 .collect(Collectors.toList());
 
-        log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' uris={}", uris);
         Map<Long, Long> eventsIdsWithParticipationRequests = requestRepository
-                .findParticipationRequestsWithStatNumberForEvents(
-                        events.stream()
-                                .map(Event::getId)
-                                .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toMap(
-                        arr -> (Long) arr[0],
-                        arr -> (Long) arr[1]));
-        log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' " +
-                "eventsIdsWithParticipationRequests={}", eventsIdsWithParticipationRequests);
+                .findParticipationRequestsWithStatNumberForEvents(getEventsIds(events)).stream()
+                .collect(Collectors.toMap(arr -> (Long) arr[0], arr -> (Long) arr[1]));
         Object responseBody = statsService.getViewStats(
                 TimeConverter.toString(TimeConverter.MIN_TIME),
                 TimeConverter.toString(TimeConverter.MAX_TIME),
                 uris,
                 false).getBody();
-        log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' responseBody={}", responseBody);
         List<ViewStatsDto> viewStatsDtos = new ObjectMapper().convertValue(responseBody, new TypeReference<>() {});
-        log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' viewStatsDtos={}", viewStatsDtos);
 
         if (viewStatsDtos.equals(Collections.emptyList())) {
             return events.stream()
-                    .map(event -> {
-                        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
-                        eventFullDto.setConfirmedRequests(
-                                eventsIdsWithParticipationRequests.get(eventFullDto.getId()).intValue());
-                        eventFullDto.setViews(0L);
-                        return eventFullDto;
-                    })
+                    .map(event -> getEventFullDtoWithZeroViews(event, eventsIdsWithParticipationRequests))
                     .collect(Collectors.toList());
         } else {
             Map<Long, Long> eventsIdsWithViews = viewStatsDtos.stream()
-                    .collect(Collectors.toMap(
-                            viewStatsDto -> Long.parseLong(
-                                    viewStatsDto
-                                            .getUri()
-                                            .split("/")[viewStatsDto.getUri()
-                                            .split("/").length - 1]),
-                            ViewStatsDto::getHits
-                    ));
-            log.info("EventConverter - method call 'toEventFullDtoListWithRequestsAndViews' eventsIdsWithViews={}",
-                    eventsIdsWithViews);
+                    .collect(Collectors.toMap(EventConverter::viewStatsDtoUriToId, ViewStatsDto::getHits));
 
             return events.stream()
-                    .map(event -> {
-                        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
-                        eventFullDto.setConfirmedRequests(
-                                eventsIdsWithParticipationRequests.get(eventFullDto.getId()).intValue());
-                        eventFullDto.setViews(eventsIdsWithViews.get(eventFullDto.getId()));
-                        return eventFullDto;
-                    })
+                    .map(event -> getEventFullDtoWithViews(event, eventsIdsWithParticipationRequests, eventsIdsWithViews))
                     .collect(Collectors.toList());
         }
+    }
+
+    private static List<Long> getEventsIds(List<Event> events) {
+        return events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+    }
+
+    private static Long viewStatsDtoUriToId(ViewStatsDto viewStatsDto) {
+        return Long.parseLong(viewStatsDto.getUri()
+                .split("/")[viewStatsDto.getUri()
+                .split("/").length - 1]);
+    }
+
+    private static EventFullDto getEventFullDtoWithViews(
+            Event event,
+            Map<Long, Long> eventsIdsWithParticipationRequests,
+            Map<Long, Long> eventsIdsWithViews) {
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setConfirmedRequests(eventsIdsWithParticipationRequests.get(eventFullDto.getId()).intValue());
+        eventFullDto.setViews(eventsIdsWithViews.get(eventFullDto.getId()));
+        return eventFullDto;
+    }
+
+    private static EventFullDto getEventFullDtoWithZeroViews(
+            Event event,
+            Map<Long, Long> eventsIdsWithParticipationRequests) {
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setConfirmedRequests(eventsIdsWithParticipationRequests.get(eventFullDto.getId()).intValue());
+        eventFullDto.setViews(0L);
+        return eventFullDto;
     }
 }

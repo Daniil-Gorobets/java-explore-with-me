@@ -2,7 +2,6 @@ package ru.practicum.ewm.compilation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.dto.CompilationMapper;
@@ -10,6 +9,7 @@ import ru.practicum.ewm.compilation.dto.NewCompilationDto;
 import ru.practicum.ewm.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
+import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventMapper;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.model.Event;
@@ -29,27 +29,24 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminCompilationService {
 
-    @Autowired
     private final CompilationRepository compilationRepository;
 
-    @Autowired
     private final EventRepository eventRepository;
 
-    @Autowired
     private final RequestRepository requestRepository;
 
-    @Autowired
     private final StatsService statsService;
 
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         List<Event> events  = new ArrayList<>();
-        List<EventShortDto> eventShortDtos  = new ArrayList<>();
+        List<EventShortDto> eventShortDtos = new ArrayList<>();
         if (!newCompilationDto.getEvents().equals(Collections.emptyList())) {
             events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
-            eventShortDtos = EventConverter.toEventFullDtoListWithRequestsAndViews(
+            List<EventFullDto> eventFullDtos = EventConverter.toEventFullDtoListWithRequestsAndViews(
                     events,
                     requestRepository,
-                    statsService).stream()
+                    statsService);
+            eventShortDtos = eventFullDtos.stream()
                     .map(EventMapper::toEventShortDto)
                     .collect(Collectors.toList());
         }

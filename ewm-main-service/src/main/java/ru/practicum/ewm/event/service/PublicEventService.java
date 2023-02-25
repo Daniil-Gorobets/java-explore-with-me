@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import ru.practicum.ewm.event.util.EventConverter;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.request.repository.RequestRepository;
 import ru.practicum.ewm.stats.StatsService;
-import ru.practicum.ewm.util.stats.AppNames;
+import ru.practicum.ewm.util.stats.AppNamesConstants;
 import ru.practicum.ewm.util.stats.HitConverter;
 import ru.practicum.ewm.util.time.converter.TimeConverter;
 
@@ -32,16 +31,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PublicEventService {
 
-    @Autowired
     private final EventRepository eventRepository;
 
-    @Autowired
     private final RequestRepository requestRepository;
 
-    @Autowired
     private final StatsService statsService;
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
     public List<EventShortDto> getEvents(
@@ -99,7 +94,7 @@ public class PublicEventService {
             eventFullDtos.sort((e1, e2) -> e2.getViews().compareTo(e1.getViews()));
         }
 
-        statsService.createView(HitConverter.toEndpointHit(AppNames.MAIN_APP_NAME, request));
+        statsService.createView(HitConverter.toEndpointHit(AppNamesConstants.MAIN_APP_NAME, request));
 
         return eventFullDtos.stream()
                 .map(EventMapper::toEventShortDto)
@@ -114,7 +109,7 @@ public class PublicEventService {
             throw new NotFoundException("Event with id=" + id + " not found");
         }
 
-        statsService.createView(HitConverter.toEndpointHit(AppNames.MAIN_APP_NAME, request));
+        statsService.createView(HitConverter.toEndpointHit(AppNamesConstants.MAIN_APP_NAME, request));
         return EventConverter.toEventFullDtoListWithRequestsAndViews(
                 List.of(event),
                 requestRepository,

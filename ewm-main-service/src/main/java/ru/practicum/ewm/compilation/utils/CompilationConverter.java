@@ -2,6 +2,7 @@ package ru.practicum.ewm.compilation.utils;
 
 import ru.practicum.ewm.compilation.dto.CompilationDto;
 import ru.practicum.ewm.compilation.model.Compilation;
+import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventMapper;
 import ru.practicum.ewm.event.dto.EventShortDto;
 import ru.practicum.ewm.event.util.EventConverter;
@@ -17,10 +18,12 @@ public class CompilationConverter {
             RequestRepository requestRepository,
             StatsService statsService) {
 
-        List<EventShortDto> eventShortDtos = EventConverter.toEventFullDtoListWithRequestsAndViews(
-                        compilation.getEvents(),
-                        requestRepository,
-                        statsService).stream()
+        List<EventFullDto> eventFullDtos = EventConverter.toEventFullDtoListWithRequestsAndViews(
+                compilation.getEvents(),
+                requestRepository,
+                statsService);
+
+        List<EventShortDto> eventShortDtos = eventFullDtos.stream()
                 .map(EventMapper::toEventShortDto)
                 .collect(Collectors.toList());
 

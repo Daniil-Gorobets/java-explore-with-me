@@ -2,7 +2,6 @@ package ru.practicum.ewm.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.EndpointHitMapper;
@@ -22,14 +21,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EwmStatsServiceService {
 
-    @Autowired
     private final EndpointHitRepository endpointHitRepository;
 
     public EndpointHitDto createEndpointHit(EndpointHitDto endpointHitDto) {
         log.debug("EwmStatsServiceService - method call 'createEndpointHit' with params: endpointHitDto={}",
                 endpointHitDto);
         EndpointHitModel endpointHitModel = EndpointHitMapper.toEndpointHitModel(endpointHitDto);
-        log.info(endpointHitModel.toString());
         return EndpointHitMapper.toEndpointHitDto(
                 endpointHitRepository.save(
                         endpointHitModel));

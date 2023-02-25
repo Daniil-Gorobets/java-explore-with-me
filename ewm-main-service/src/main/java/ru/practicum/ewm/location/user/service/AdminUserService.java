@@ -2,7 +2,6 @@ package ru.practicum.ewm.location.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.exception.IntegrityException;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminUserService {
 
-    @Autowired
     private final UserRepository userRepository;
 
     public List<UserDto> get(List<Long> ids, Integer from, Integer size) {

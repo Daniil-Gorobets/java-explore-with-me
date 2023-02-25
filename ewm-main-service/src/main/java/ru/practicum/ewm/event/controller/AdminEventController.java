@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDto;
@@ -23,7 +22,6 @@ import java.util.List;
 @Slf4j
 public class AdminEventController {
 
-    @Autowired
     private final AdminEventService adminEventService;
 
     @GetMapping
