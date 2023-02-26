@@ -2,7 +2,7 @@ package ru.practicum.ewm.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +21,11 @@ import java.util.List;
 @Slf4j
 public class EwmStatsServiceController {
 
-    @Autowired
     private final EwmStatsServiceService service;
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
         log.info("EwmStatsServiceController - POST: /hit endpointHitDto={}", endpointHitDto);

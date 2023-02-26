@@ -1,40 +1,67 @@
 package ru.practicum.ewm.client;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import ru.practicum.ewm.dto.EndpointHitDto;
 
-
-import java.time.LocalDateTime;
 import java.util.List;
 
-
-public class StatsClient extends BaseClient {
-
-    private static final String API_PREFIX = "";
-
-
-    public StatsClient(@Value("${ewm-stats-service-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
-        );
-    }
+@AllArgsConstructor
+@Slf4j
+@Component
+public class StatsClient {
+    private final WebClient webClient;
 
     public ResponseEntity<Object> createEndpointHit(EndpointHitDto endpointHitDto) {
-        return post("/hit", endpointHitDto);
+        return webClient.post()
+                .uri("/hit")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(endpointHitDto))
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(Object.class)
+                                .map(body -> ResponseEntity.ok().body(body));
+                    } else {
+                        return response.createException()
+                                .flatMap(Mono::error);
+                    }
+                })
+                .block();
     }
 
     public ResponseEntity<Object> getViewStats(
-            LocalDateTime start,
-            LocalDateTime end,
+            String start,
+            String end,
             List<String> uris,
             Boolean unique) {
-        return get("/stats", start, end, uris, unique);
+
+        String uriParams = uris.stream()
+                .reduce("", (params, uri) -> params + "&uris=" + uri);
+
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/stats")
+                        .queryParam("start", start)
+                        .queryParam("end", end)
+                        .query(uriParams)
+                        .queryParam("unique", unique)
+                        .build())
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return response.bodyToMono(Object.class)
+                                .map(body -> ResponseEntity.ok().body(body));
+                    } else {
+                        return response.createException()
+                                .flatMap(Mono::error);
+                    }
+                })
+                .block();
     }
 }

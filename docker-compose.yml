@@ -14,8 +14,6 @@ services:
   stats-db:
     image: postgres:14-alpine
     container_name: ewm_stats_db
-    ports:
-      - "6541:5432"
     environment:
       - POSTGRES_DB=ewm-stats-db
       - POSTGRES_USER=root
@@ -32,13 +30,11 @@ services:
       - ewm-db
       - stats-server
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewm-main-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-main-db
 
   ewm-db:
     image: postgres:14-alpine
     container_name: ewm_main_db
-    ports:
-      - "6542:5433"
     environment:
       - POSTGRES_DB=ewm-main-db
       - POSTGRES_USER=root
