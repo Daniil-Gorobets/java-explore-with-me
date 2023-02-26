@@ -3,7 +3,7 @@ package ru.practicum.ewm.event.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.category.dto.CategoryDto;
-import ru.practicum.ewm.location.user.dto.UserShortDto;
+import ru.practicum.ewm.user.dto.UserShortDto;
 
 @Getter
 @Setter
