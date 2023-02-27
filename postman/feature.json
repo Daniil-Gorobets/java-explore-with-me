@@ -23,7 +23,7 @@
 									"});\r",
 									"\r",
 									"const target = pm.response.json();\r",
-									"const user1Id = target.id;\r",
+									"const user1Id = parseInt(target.id);\r",
 									"pm.collectionVariables.set(\"user1Id\", user1Id);\r",
 									""
 								],
@@ -71,7 +71,7 @@
 									"});\r",
 									"\r",
 									"const target = pm.response.json();\r",
-									"const user2Id = target.id;\r",
+									"const user2Id = parseInt(target.id);\r",
 									"pm.collectionVariables.set(\"user2Id\", user2Id);\r",
 									""
 								],
@@ -119,7 +119,7 @@
 									"});\r",
 									"\r",
 									"const target = pm.response.json();\r",
-									"const categoryId = target.id;\r",
+									"const categoryId = parseInt(target.id);\r",
 									"pm.collectionVariables.set(\"categoryId\", categoryId);"
 								],
 								"type": "text/javascript"
@@ -166,7 +166,7 @@
 									"});\r",
 									"\r",
 									"const target = pm.response.json();\r",
-									"const eventWithoutModerationId = target.id;\r",
+									"const eventWithoutModerationId =parseInt(target.id);\r",
 									"pm.collectionVariables.set(\"eventWithoutModerationId\", eventWithoutModerationId);\r",
 									""
 								],
@@ -215,7 +215,7 @@
 									"});\r",
 									"\r",
 									"const target = pm.response.json();\r",
-									"const eventWithModerationId = target.id;\r",
+									"const eventWithModerationId = parseInt(target.id);\r",
 									"pm.collectionVariables.set(\"eventWithModerationId\", eventWithModerationId);"
 								],
 								"type": "text/javascript"
