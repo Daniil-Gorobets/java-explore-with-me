@@ -91,6 +91,24 @@ public class PrivateCommentService {
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
         List<Comment> comments = commentRepository.findAllByIdInAndEventId(
                 commentStatusUpdateByInitiatorRequest.getCommentIds(), event.getId());
+
+        validateCommentStatusByInitiator(user, event, comments);
+
+        List<Comment> commentsToChange = commentRepository.findAllByIdInAndEventId(
+                commentStatusUpdateByInitiatorRequest.getCommentIds(),
+                eventId);
+
+        CommentState newState = getNewCommentState(commentStatusUpdateByInitiatorRequest.getCommentStatus());
+        List<Comment> changedComments = commentsToChange.stream()
+                .peek(comment -> comment.setState(newState))
+                .collect(Collectors.toList());
+
+        return commentRepository.saveAll(changedComments).stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    private void validateCommentStatusByInitiator(User user, Event event, List<Comment> comments) {
         boolean allCommentInRejectedOrPendingState = comments.stream()
                 .allMatch(comment -> comment.getState() == CommentState.REJECTED
                         || comment.getState() == CommentState.PENDING);
@@ -100,28 +118,18 @@ public class PrivateCommentService {
         if (!user.getId().equals(event.getInitiator().getId())) {
             throw new IntegrityException("User is not event initiator");
         }
-        final CommentState newState;
-        if (commentStatusUpdateByInitiatorRequest.getCommentStatus() ==
-                UpdateByInitiatorCommentRequestStatus.APPROVE) {
-            newState = CommentState.PUBLISHED;
-        } else if (commentStatusUpdateByInitiatorRequest.getCommentStatus() ==
-                UpdateByInitiatorCommentRequestStatus.REJECT) {
-            newState = CommentState.REJECTED;
-        } else {
-            throw new IntegrityException("Unknown update comment request status: " +
-                    commentStatusUpdateByInitiatorRequest.getCommentStatus() + ". Status should be APPROVE or REJECT");
+    }
+
+    private CommentState getNewCommentState(UpdateByInitiatorCommentRequestStatus commentStatus) {
+        switch (commentStatus) {
+            case APPROVE:
+                return CommentState.PUBLISHED;
+            case REJECT:
+                return CommentState.REJECTED;
+            default:
+                throw new IntegrityException("Unknown update comment request status: " + commentStatus +
+                        ". Status should be APPROVE or REJECT");
         }
-        List<Comment> commentsToChange = commentRepository.findAllByIdInAndEventId(
-                commentStatusUpdateByInitiatorRequest.getCommentIds(),
-                eventId);
-
-        List<Comment> changedComments = commentsToChange.stream()
-                .peek(comment -> comment.setState(newState))
-                .collect(Collectors.toList());
-
-        return commentRepository.saveAll(changedComments).stream()
-                .map(CommentMapper::toCommentDto)
-                .collect(Collectors.toList());
     }
 
     private CommentState updateCommentStatus(UpdateCommentRequest updateCommentRequest, Comment comment) {
