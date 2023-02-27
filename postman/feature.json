@@ -282,8 +282,8 @@
 									"    pm.expect(target.id).equal(1);\r",
 									"    pm.expect(target.created).to.not.be.null;\r",
 									"    pm.expect(target.text).equal(\"This is a test comment\");\r",
-									"    pm.expect(target.user).equal(pm.collectionVariables.get(\"user1Id\"));\r",
-									"    pm.expect(target.event).equal(pm.collectionVariables.get(\"eventWithoutModerationId\"));\r",
+									"    pm.expect(target.user).equal(pm.collectionVariables.get(\"user1Id\"), \"UserId is wrong: \" + pm.collectionVariables.get(\"user1Id\") + \" != \" + target.user);\r",
+									"    pm.expect(target.event).equal(pm.collectionVariables.get(\"eventWithoutModerationId\"), \"EventId is wrong: \"  + pm.collectionVariables.get(\"user1Id\") + \" != \" + target.user);\r",
 									"    pm.expect(target.state).equal(\"PUBLISHED\");\r",
 									"});"
 								],
