@@ -1,4 +1,4 @@
-package ru.practicum.ewm.request.model;
+package ru.practicum.ewm.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,23 +16,21 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "participation_requests")
-public class ParticipationRequest {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     @Column(name = "created")
     LocalDateTime created;
-
+    @Column(name = "comment_text")
+    String text;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
     @ManyToOne
     @JoinColumn(name = "event_id")
     Event event;
-
-    @ManyToOne
-    @JoinColumn(name = "requester_id")
-    User requester;
-
-    @Column(name = "status")
-    RequestStatus status;
+    @Column(name = "state")
+    CommentState state;
 }
